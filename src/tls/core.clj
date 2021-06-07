@@ -10,11 +10,11 @@
       false)))
 
 (defn member?
-	[x list] 
-	  (cond
-	    (empty? list) false
-	    (= x (first list)) true
-	    :else (member? x (rest list))))
+  [x list] 
+    (cond
+      (empty? list) false
+      (= x (first list)) true
+      :else (member? x (rest list))))
 
 (defn rember
   [x list]
@@ -46,10 +46,10 @@
 
 (defn subst 
   [new old list]
-	  (cond
-	    (empty? list) ()
-	    (= old (first list)) (cons new (rest list))
-	    :else (cons (first list) (subst new old (rest list)))))
+    (cond
+      (empty? list) ()
+      (= old (first list)) (cons new (rest list))
+      :else (cons (first list) (subst new old (rest list)))))
 
 (defn subst2
   [new o1 o2 list]
@@ -61,75 +61,75 @@
 (defn multirember
   [x list]
     (cond
-			(empty? list) ()
-			(= x (first list)) (multirember x (rest list))
-			:else (cons (first list) (multirember x (rest list)))))
+      (empty? list) ()
+      (= x (first list)) (multirember x (rest list))
+      :else (cons (first list) (multirember x (rest list)))))
 
 (defn multiinsertR
   [new old list]
-  	(cond
-  		(empty? list) ()
-  		(= old (first list)) (cons old (cons new (multiinsertR new old (rest list))))
-  		:else (cons (first list) (multiinsertR new old (rest list)))))
+    (cond
+      (empty? list) ()
+      (= old (first list)) (cons old (cons new (multiinsertR new old (rest list))))
+      :else (cons (first list) (multiinsertR new old (rest list)))))
 
 (defn multiinsertL
-	[new old list]
-		(cond
-		  (empty? list) ()
-		  (= old (first list)) (cons new (cons old (multiinsertL new old (rest list))))
-		  :else (cons (first list) (multiinsertL new old (rest list)))))
+  [new old list]
+    (cond
+      (empty? list) ()
+      (= old (first list)) (cons new (cons old (multiinsertL new old (rest list))))
+      :else (cons (first list) (multiinsertL new old (rest list)))))
 
 (defn multisubst
-	[new old list]
-		(cond
-			(empty? list) ()
-			(= old (first list)) (cons new (multisubst new old (rest list)))
-			:else (cons (first list) (multisubst new old (rest list)))))
+  [new old list]
+    (cond
+      (empty? list) ()
+      (= old (first list)) (cons new (multisubst new old (rest list)))
+      :else (cons (first list) (multisubst new old (rest list)))))
 
 (defn add
   [n m]
-  	(cond
-  		(zero? m) n
-  		:else (add (+ n 1) (- m 1))))
+    (cond
+      (zero? m) n
+      :else (add (+ n 1) (- m 1))))
 
 (defn sub
-	[n m]
-		(cond
-			(zero? m) n
-			:else (sub (- n 1) (- m 1))))
+  [n m]
+    (cond
+      (zero? m) n
+      :else (sub (- n 1) (- m 1))))
 
 (defn addtup
   [tup]
     ((cond
-    	(empty? tup) 0
-    	:else (+ (first tup) (addtup (rest tup))))))
+      (empty? tup) 0
+      :else (+ (first tup) (addtup (rest tup))))))
 
 (defn mult
-	[m n]
-		(cond
-			(zero? m) 0
-			:else (+ n (mult (- m 1) n))))
+  [m n]
+    (cond
+      (zero? m) 0
+      :else (+ n (mult (- m 1) n))))
 
 (defn tupAdd
-	[tup1 tup2]
-		(cond
-		  (and (empty? tup1) (empty? tup2)) ()
-		  (empty? tup1) tup2
-		  (empty? tup2) tup1
-		  :else (cons (+ (first tup1) (first tup2)) (tupAdd (rest tup1) (rest tup2)))))
+  [tup1 tup2]
+    (cond
+      (and (empty? tup1) (empty? tup2)) ()
+      (empty? tup1) tup2
+      (empty? tup2) tup1
+      :else (cons (+ (first tup1) (first tup2)) (tupAdd (rest tup1) (rest tup2)))))
 
 (defn gt
-	[n m]
-	(cond
-		(zero? n) false
-		(zero? m) true
-		:else (gt (- n 1) (- m 1))))
-		
+  [n m]
+  (cond
+    (zero? n) false
+    (zero? m) true
+    :else (gt (- n 1) (- m 1))))
+    
 (defn lt
   [n m]
   (cond
-  	(zero? m) false
-  	(zero? n) true
+    (zero? m) false
+    (zero? n) true
     :else (lt (- n 1) (- m 1))))
 
 (defn eq 
