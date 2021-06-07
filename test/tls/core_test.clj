@@ -112,25 +112,25 @@
 
 (deftest length-test
   (testing "Testing length function"
-    (is (= 1 (length '(1))))
-    (is (= 6 (length '("hotdogs" "with" "mustard" "sauerkraut" "and" "pickles"))))
-    (is (= 5 (length '("ham" "and" "cheese" "on" "rye"))))))
+    (is (= 1 (length (list 1))))
+    (is (= 6 (length (list "hotdogs" "with" "mustard" "sauerkraut" "and" "pickles"))))
+    (is (= 5 (length (list "ham" "and" "cheese" "on" "rye"))))))
 
 (deftest pick-test
   (testing "Testing pick function"
-    (is (= "macaroni" (pick 4 '("lasagna" "spaghetti" "ravioli" "macaroni" "meatball"))))))
+    (is (= "macaroni" (pick 4 (list "lasagna" "spaghetti" "ravioli" "macaroni" "meatball"))))))
 
 (deftest rempick-test
   (testing "Testing rempick function"
-    (is (= '("hotdogs" "with" "mustard") (rempick 3 '("hotdogs" "with" "hot" "mustard"))))))
+    (is (= (list "hotdogs" "with" "mustard") (rempick 3 (list "hotdogs" "with" "hot" "mustard"))))))
 
 (deftest no-nums-test
   (testing "Testing no-nums function"
-    (is (= '("pears" "prunes" "dates") (no-nums '(5 "pears" 6 "prunes" 9 "dates"))))))
+    (is (= (list "pears" "prunes" "dates") (no-nums (list 5 "pears" 6 "prunes" 9 "dates"))))))
 
 (deftest all-nums-test
   (testing "Testing all-nums function"
-    (is (= '(5 6 9) (all-nums '(5 "pears" 6 "prunes" 9 "dates"))))))
+    (is (= (list 5 6 9) (all-nums (list 5 "pears" 6 "prunes" 9 "dates"))))))
 
 (deftest eqan-test
   (testing "Testing eqan function"
@@ -140,38 +140,38 @@
 
 (deftest occur-test
   (testing "Testing occur function"
-    (is (= 1 (occur 5 '(5 4 3 2 1))))
-    (is (= 1 (occur "asd" '("asd" "ASD" 5 6))))
-    (is (= 5 (occur "asd" '("asd" 1 "asd" 2 "asd" 3 "asd" 4 "asd" 5))))
-    (is (= 5 (occur 1 '(1 "asd" 1 "asdasd" 1 "asdasdasdfd" 1 "sjkgjh" 1))))))
+    (is (= 1 (occur 5 (list 5 4 3 2 1))))
+    (is (= 1 (occur "asd" (list "asd" "ASD" 5 6))))
+    (is (= 5 (occur "asd" (list "asd" 1 "asd" 2 "asd" 3 "asd" 4 "asd" 5))))
+    (is (= 5 (occur 1 (list 1 "asd" 1 "asdasd" 1 "asdasdasdfd" 1 "sjkgjh" 1))))))
 
 (deftest rempick-one-test
   (testing "Testing rempick function using custom one? function"
-    (is (= '("lemon" "meringue" "pie") (rempick-one 3 '("lemon" "meringue" "salty" "pie"))))))
+    (is (= (list "lemon" "meringue" "pie") (rempick-one 3 (list "lemon" "meringue" "salty" "pie"))))))
 
 (deftest rember*-test
   (testing "Testing rember* function"
-    (is (= '('("coffee") '('("tea")) '("and" '("hick"))) (rember* "cup" '('("coffee") "cup" '('("tea") "cup") '("and" '("hick") "cup")) )))))
+    (is (= (list (list "coffee") (list (list "tea")) (list "and" (list "hick"))) (rember* "cup" (list (list "coffee") "cup" (list (list "tea") "cup") (list "and" (list "hick") "cup")) )))))
 
 (deftest insertR*-test
   (testing "Testing insertR*"
-    (is (= '('("how" "much" '("wood")) "could" '('("a" '("wood") "chuck" "roast")) '('('("chuck" "roast"))) '("if" '("a") '('("wood" "chuck" "roast"))) "could" "chuck" "roast" "wood") (insertR* "roast" "chuck" '('("how" "much" '("wood")) "could" '('("a" '("wood") "chuck")) '('('("chuck"))) '("if" '("a") '('("wood" "chuck"))) "could" "chuck" "wood")) ))))
+    (is (= (list (list "how" "much" (list "wood")) "could" (list (list "a" (list "wood") "chuck" "roast")) (list (list (list "chuck" "roast"))) (list "if" (list "a") (list (list "wood" "chuck" "roast"))) "could" "chuck" "roast" "wood") (insertR* "roast" "chuck" (list (list "how" "much" (list "wood")) "could" (list (list "a" (list "wood") "chuck")) (list (list (list "chuck"))) (list "if" (list "a") (list (list "wood" "chuck"))) "could" "chuck" "wood")) ))))
 
 (deftest occur*-test 
   (testing "Testing occur*"
-    (is (= 5 (occur* "banana" '('("banana") '("split" '('('('("banana" "ice"))) '("cream" '("banana")) "sherbet")) '("banana") '("bread") '("banana" "brandy")))))))
+    (is (= 5 (occur* "banana" (list (list "banana") (list "split" (list (list (list (list "banana" "ice"))) (list "cream" (list "banana")) "sherbet")) (list "banana") (list "bread") (list "banana" "brandy")))))))
 
 (deftest substr*-test
   (testing "Testing subst*"
-    (is (= '('("orange") '("split" '('('('("orange" "ice"))) '("cream" '("orange")) "sherbet")) '("orange") '("bread") '("orange" "brandy")) (subst* "orange" "banana" '('("banana") '("split" '('('('("banana" "ice"))) '("cream" '("banana")) "sherbet")) '("banana") '("bread") '("banana" "brandy"))) ))))
+    (is (= (list (list "orange") (list "split" (list (list (list (list "orange" "ice"))) (list "cream" (list "orange")) "sherbet")) (list "orange") (list "bread") (list "orange" "brandy")) (subst* "orange" "banana" (list (list "banana") (list "split" (list (list (list (list "banana" "ice"))) (list "cream" (list "banana")) "sherbet")) (list "banana") (list "bread") (list "banana" "brandy"))) ))))
 
 (deftest insertL*-test
   (testing "Testing insertL* function"
-    (is (= '('("how" "much" '("wood")) "could" '('("a" '("wood") "pecker" "chuck")) '('('("pecker" "chuck")) '("if" '("a") '('("wood" "pecker" "chuck"))) "could" "pecker" "chuck" "wood") (insertL* "pecker" "chuck" '('("how" "much" '("wood")) "could" '('("a" '("wood") "chuck")) '('('("chuck"))) '("if" '("a") '('("wood" "chuck"))) "could" "chuck" "wood")))))))
+    (is (= (list (list "how" "much" (list "wood")) "could" (list (list "a" (list "wood") "pecker" "chuck")) (list (list (list "pecker" "chuck")) (list "if" (list "a") (list (list "wood" "pecker" "chuck"))) "could" "pecker" "chuck" "wood") (insertL* "pecker" "chuck" (list (list "how" "much" (list "wood")) "could" (list (list "a" (list "wood") "chuck")) (list (list (list "chuck"))) (list "if" (list "a") (list (list "wood" "chuck"))) "could" "chuck" "wood")))))))
 
 (deftest member*-test
   (testing "Testing member* function"
-    (is (= true (member* "chips" '('("potato") '("chips" '('("with") "fish") '("chips"))))))))
+    (is (= true (member* "chips" (list (list "potato") (list "chips" (list (list "with") "fish") (list "chips"))))))))
 
 (deftest leftmost-test
   (testing "Testing leftmost function"
