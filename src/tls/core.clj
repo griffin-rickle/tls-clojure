@@ -10,7 +10,7 @@
       false)))
 
 (defn member?
-  [x list] 
+  [x list]
     (cond
       (empty? list) false
       (= x (first list)) true
@@ -27,7 +27,7 @@
   [list]
     (cond
       (empty? list) ()
-      (list? (first list)) (cons (first (first list)) (firsts (rest list)))
+      (or (seq? list) (list? (first list))) (cons (first (first list)) (firsts (rest list)))
       :else ()))
 
 (defn insertL
@@ -293,3 +293,173 @@
     (empty? l1) (empty? l2)
     (empty? l2) false
     :else (and (equal? (first l1) (first l2)) (eqlist-eq? (rest l1) (rest l2)))))
+
+(defn numbered?
+  [aexp]
+  (cond
+    (atom? aexp) (number? aexp)
+    :else (and (numbered? (first aexp)) (numbered? (first (rest (rest aexp)))))))
+
+(defn value
+  [nexp]
+  (cond
+  (atom? nexp) nexp
+  (= '+ (first (rest nexp))) (+ (first nexp) (value (first (rest (rest nexp)))))
+  (= '* (first (rest nexp))) (* (first next) (value (first (rest (rest nexp)))))
+  (= 'pow (first (rest nexp))) (pow (first nexp) (value (first (rest (rest nexp)))))))
+
+(defn first-sub-expression
+  [aexp] (first aexp))
+
+(defn second-sub-expression
+  [aexp] (first (rest (rest aexp))))
+
+(defn operator
+  [aexp] (first (rest aexp)))
+
+(defn sero?
+  [n] (empty? n))
+
+(defn sadd1
+  [n] (cons () n))
+
+(defn ssub1
+  [n] (rest n))
+
+(defn sadd
+  [n m]
+  (cond
+    (sero? m) (sadd1 n)
+    :else (sadd (sadd1 n) (ssub1 m))))
+
+(defn is-set
+  [set]
+  (cond
+    (empty? set) true
+    (member? (first set) (rest set)) false
+    :else (is-set (rest set))))
+
+(defn make-set
+  [list]
+  (cond
+    (empty? list) ()
+    (member? (first list) (rest list)) (make-set (cons (first list) (multirember (first list) (rest list))))
+    :else (cons (first list) (make-set (rest list)))))
+
+(defn subset?
+  [set1 set2]
+  (cond
+    (empty? set1) true
+    :else (and (member? (first set1) set2) (subset? (rest set1) set2))))
+
+(defn eqset?
+  [set1 set2] (and (subset? set1 set2) (subset? set2 set1)))
+
+(defn intersect?
+  [set1 set2] 
+  (cond
+    (empty? set1) false
+    :else (or (member? (first set1) set2) (intersect? (rest set1) set2))))
+
+(defn intersect
+  [set1 set2]
+  (cond
+    (empty? set1) ()
+    (member? (first set1) set2) (cons (first set1) (intersect (rest set1) set2))
+    :else (intersect (rest set1) set2)))
+
+(defn union
+  [set1 set2]
+  (cond
+    (empty? set1) set2
+    (member? (first set1) set2) (union (rest set1) set2)
+    :else (cons (first set1) (union (rest set1) set2))))
+
+(defn intersectall
+  [set]
+  (cond
+    (empty? (rest set)) (first set)
+    :else (intersect (first set) (intersectall (rest set)))))
+
+(defn a-pair?
+  [x]
+  (cond
+    (atom? x) false
+    (empty? x) false
+    (empty? (rest x)) false
+    (empty? (rest (rest x))) true
+    :else false))
+
+; (defn first
+;   [p] (first p))
+
+; (defn second
+;   [p] (first (rest p)))
+
+(defn build
+  [s1 s2] (cons s1 (cons s2 ())))
+
+(defn third
+  [p] (first (rest (rest p))))
+
+(defn fun?
+  [rel] (is-set (firsts rel)))
+
+(defn revpair
+  [pair] (build (second pair) (first pair)))
+
+(defn revrel
+  [rel]
+  (cond
+    (empty? rel) ()
+    :else (cons (revpair (first rel)) (revrel (rest rel)))))
+
+(defn seconds
+  [fun] (firsts (revrel fun)))
+
+(defn fullfun?
+  [fun] (fun? (revrel fun)))
+
+(defn rember-f
+  [test?]
+  (fn
+    [a l]
+    (cond
+      (empty? l) ()
+      (test? a (first l)) (rest l)
+      :else (cons (first l) ((rember-f test?) a (rest l))))))
+
+(defn insertL-f
+  [test?]
+  (fn
+    [old new l]
+    (cond
+      (empty? l) ()
+      (test? old (first l)) (cons new (cons old) (rest l))
+      :else (cons (first l) ((insertL-f test?) old new (rest l))))))
+
+(defn insertR-f
+  [test?]
+  (fn
+    [old new l]
+    (cond
+      (empty? l) ()
+      (test? old (first l)) (cons old (cons new (rest l)))
+      :else (cons (first l) ((insertR-f test?) old new (rest l))))))
+
+(defn seqL
+  [new old l] (cons new (cons old l)))
+
+(defn seqR
+  [new old l] (cons old (cons new l)))
+
+(defn insert-g
+  [seq-g]
+  (fn
+    [new old l]
+    (cond
+      (empty? l) ()
+      (equal? old (first l)) (seq-g new old (rest l))
+      :else (cons (first l) ((insert-g seq-g) new old (rest l))))))
+
+(defn insertL-g (insert-g seqL))
