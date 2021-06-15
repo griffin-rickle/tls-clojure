@@ -5,7 +5,7 @@
 (deftest test-atom
   (testing "Testing atom? call")
   (is (= true (atom? "a")))
-  (is (= false (atom? ()))))
+  (is (= false (atom? ())))
 
 (deftest lat-test
   (testing "List of atoms"
@@ -29,6 +29,7 @@
 (deftest firsts-test
   (testing "Testing firsts functionality"
     (is (= (list "a" "b" "c") (firsts (list (list "a") (list "b") (list "c")))))
+    (is (= (list 1 2 3) (firsts (list (list 1 2 3) (list 2 3 4) (list 3 4 5)))))
     (is (= (list) (firsts (list))))))
 
 (deftest insertR-test
@@ -193,3 +194,90 @@
     (is (= false (eqlist-eq? (list "banana" (list (list "split"))) (list (list "banana") (list "split")))))
     (is (= false (eqlist-eq? (list "beef" (list (list "sausage")) (list "and" (list "soda"))) (list "beef" (list (list "salami")) (list "and" (list "soda"))))))
     (is (= true (eqlist-eq? (list "beef" (list (list "sausage")) (list "and" (list "soda"))) (list "beef" (list (list "sausage")) (list "and" (list "soda"))))))))
+
+(deftest numbered-test
+  (testing "Testing numbered function"
+    (is (= true (numbered? (list 3 '+ 4))))
+    (is (= true (numbered? (list 3 '+ (list 4 'pow 5)))))
+    (is (= false (numbered? (list 2 '* "sausage"))))))
+
+(deftest value-test
+  (testing "Testing value function"
+    (is (= 13 (value 13)))
+    (is (= 4 (value (list 1 '+ 3))))
+    (is (= 82 (value (list 1 '+ (list 3 'pow 4)))))))
+
+; (deftest sadd-test
+;   (testing "Testing sadd function"
+;     (println(sadd (list) (list (list) (list))))))
+
+(deftest is-set-test
+  (testing "Testing set function"
+    (is (= false (is-set (list "apple" "peaches" "apple" "plum"))))
+    (is (= true (is-set (list "apples" "peaches" "pears" "plums"))))
+    (is (= true (is-set (list))))))
+
+(deftest make-set-test
+  (testing "Testing make set"
+    (is (= (list "apple" "peach" "pear" "plum" "lemon") (make-set (list "apple" "peach" "pear" "peach" "plum" "apple" "lemon" "peach"))))
+    (is (= (list "apple" 3 "pear" 4 9) (make-set (list "apple" 3 "pear" 4 9 "apple" 3 4))))))
+
+(deftest subset-test
+  (testing "Testing subset method"
+    (is (= true (subset? (list 5 "chicken" "wings") (list 5 "hamburgers" 2 "pieces" "fried" "chicken" "and" "light" "duckling" "wings"))))
+    (is (= false (subset? (list 4 "pounds" "of" "horseradish") (list "four" "pounds" "chicken" "and" 5 "ounces" "horseradish"))))))
+
+(deftest eqset-test
+  (testing "Testing eqset method"
+    (is (= true (eqset? (list 6 "large" "chickens" "with" "wings") (list 6 "chickens" "with" "large" "wings"))))))
+
+(deftest intersect?-test
+  (testing "Testing intersect? method"
+    (is (= true (intersect? (list "stewed" "tomatoes" "and" "macaroni") (list "macaroni" "and" "cheese"))))))
+
+(deftest intersect-test
+  (testing "Testing intersect method"
+    (is (= (list "and" "macaroni") (intersect (list "stewed" "tomatoes" "and" "macaroni") (list "macaroni" "and" "cheese"))))))
+
+(deftest union-test
+  (testing "Testing union function"
+    (is (= (list "stewed" "tomatoes" "casserole" "macaroni" "and" "cheese") (union (list "stewed" "tomatoes" "and" "macaroni" "casserole") (list "macaroni" "and" "cheese"))))))
+
+(deftest intersectall-test
+  (testing "Testing intersectall function"
+    (is (= (list "a") (intersectall (list (list "a" "b" "c") (list "c" "a" "d" "e") (list "e" "f" "g" "h" "a" "b")))))
+    (is (= (list 6 "and") (intersectall (list (list 6 "pears" "and") (list 3 "peaches" "and" 6 "peppers") (list 8 "pears" "and" 6 "plums") (list "and" 6 "prunes" "with" "some" "apples")))))))
+
+(deftest a-pair-test
+  (testing "Testing a-pair function"
+    (is (= true (a-pair? (list "pear" "pear"))))
+    (is (= true (a-pair? (list 3 7))))
+    (is (= true (a-pair? (list (list 2) (list "pair")))))
+    (is (= true (a-pair? (list "full" (list "house")))))))
+
+(deftest fun-test
+  (testing "Testing fun? function"
+    (is (= false (fun? (list (list 4 3) (list 4 2) (list 7 6) (list 6 2) (list 3 4)))))
+    (is (= true (fun? (list (list 8 3) (list 4 2) (list 7 6) (list 6 2) (list 3 4)))))
+    (is (= false (fun? (list (list "d" 4) (list "b" 0) (list "b" 9) (list "e" 5) (list "g" 4)))))))
+
+(deftest revrel-test
+  (testing "Testing revrel function"
+    (is (= (list (list "a" 8) (list "pie" "pumpkin") (list "sick" "got")) (revrel (list (list 8 "a") (list "pumpkin" "pie") (list "got" "sick")))))))
+
+(deftest fullfun-test
+  (testing "Testing fullfun? function"
+    (is (= false (fullfun? (list (list 8 3) (list 4 2) (list 7 6) (list 6 2) (list 3 4)))))
+    (is (= false (fullfun? (list (list "grape" "raisin") (list "plum" "prune") (list "stewed" "prune")))))
+    (is (= true (fullfun? (list (list 8 3) (list 4 8) (list 7 6) (list 6 2) (list 3 4)))))))
+
+(deftest rember-f-test
+  (testing "Testing rember-f function"
+    (is (= (list "salad" "is" "good") ((rember-f equal?) "tuna" (list "tuna" "salad" "is" "good"))))
+    (is (= (list "shrimp" "salad" "and" "salad") ((rember-f equal?) "tuna" (list "shrimp" "salad" "and" "tuna" "salad"))))))
+
+(deftest insertL-g-test
+  (testing "Testing insertL function created from passing seqL to insert-g"
+    (is (= (list "ice" "cream" "with" "topping" "fudge" "for" "dessert") (insertL-g "topping" "fudge" (list "ice" "cream" "with" "fudge" "for" "dessert"))))
+    (is (= (list "tacos" "tamales" "jalapeno" "and" "salsa" ) (insertL-g "jalapeno" "and" (list "tacos" "tamales" "and" "salsa"))))
+    (is (= (list "a" "b" "c" "e" "d" "f" "g" "d" "h") (insertL-g "e" "d" (list "a" "b" "c" "d" "f" "g" "d" "h"))))))
