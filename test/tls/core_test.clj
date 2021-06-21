@@ -5,7 +5,7 @@
 (deftest test-atom
   (testing "Testing atom? call")
   (is (= true (atom? "a")))
-  (is (= false (atom? ())))
+  (is (= false (atom? ()))))
 
 (deftest lat-test
   (testing "List of atoms"
@@ -281,3 +281,50 @@
     (is (= (list "ice" "cream" "with" "topping" "fudge" "for" "dessert") (insertL-g "topping" "fudge" (list "ice" "cream" "with" "fudge" "for" "dessert"))))
     (is (= (list "tacos" "tamales" "jalapeno" "and" "salsa" ) (insertL-g "jalapeno" "and" (list "tacos" "tamales" "and" "salsa"))))
     (is (= (list "a" "b" "c" "e" "d" "f" "g" "d" "h") (insertL-g "e" "d" (list "a" "b" "c" "d" "f" "g" "d" "h"))))))
+
+(deftest insertR-g-test
+  (testing "Testing insertR function created from passing seqR to insert-g"
+    (is (= (list "ice" "cream" "with" "fudge" "topping" "for" "dessert" (insertR-g "topping" "fudge" (list "ice" "cream" "with" "fudge" "for" "dessert")))))))
+
+(deftest subst-g-test
+  (testing "Testing subst method"
+    (is (= (list "ice" "cream" "with" "topping" "for" "dessert") (subst-g "topping" "fudge" (list "ice" "cream" "with" "fudge" "for" "dessert"))))
+    (is (= (list "tacos" "tamales" "jalapeno" "salsa" ) (subst-g "jalapeno" "and" (list "tacos" "tamales" "and" "salsa"))))
+    (is (= (list "a" "b" "c" "e" "f" "g" "d" "h") (subst-g "e" "d" (list "a" "b" "c" "d" "f" "g" "d" "h"))))))
+
+(deftest rember-g-test
+  (testing "Testing rember"
+    (is (= (list "a" "b" "c") (rember-g "d" (list "a" "b" "c" "d"))))
+    (is (= (list) (rember-g "d" (list "d"))))
+    (is (= (list "a" "b" "c" "d") (rember-g "e" (list "a" "b" "c" "d"))))))
+
+(deftest value-f-test
+  (testing "Testing value-f function"
+    (is (= 13 (value-f 13)))
+    (is (= 4 (value-f (list 1 '+ 3))))
+    (is (= 4 (value-f (list 2 '* 2))))
+    (is (= 82 (value (list 1 '+ (list 3 'pow 4)))))))
+
+(deftest multirember-f-test
+  (testing "Testing Multirember function"
+    (is (= (list "coffee" "tea" "and" "hick") ((multirember-f =) "cup" (list "coffee" "cup" "tea" "cup" "and" "hick" "cup"))))
+    (is (= (list "shrimp" "salad" "salad" "and") ((multirember-f =) "tuna" (list "shrimp" "salad" "tuna" "salad" "and" "tuna"))))))
+
+(defn a-friend
+  [x y] (empty? y))
+
+(defn last-friend
+  [x y] (count x))
+
+(deftest multirember-and-co-test
+  (testing "Testing multirember-and-co"
+    (is (= false (multirember-and-co "tuna" (list "tuna") a-friend)))
+    (is (= true (multirember-and-co "tuna" (list) a-friend)))
+    (is (= false (multirember-and-co "tuna" (list "and" "tuna") a-friend)))
+    (is (= 3 (multirember-and-co "tuna" (list "strawberries" "tuna" "and" "swordfish") last-friend)))))
+
+(deftest evens-only-test
+  (testing "Testing even function"
+    (is (= (list (list 2 8) 10 (list (list) 6) 2) (evens-only* (list (list 9 1 2 8) 3 10 (list (list 9 9) 7 6) 2))))))
+
+

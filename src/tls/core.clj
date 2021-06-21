@@ -462,4 +462,81 @@
       (equal? old (first l)) (seq-g new old (rest l))
       :else (cons (first l) ((insert-g seq-g) new old (rest l))))))
 
-(defn insertL-g (insert-g seqL))
+; (defn insertL-g [new old l] ((insert-g (fn [new old l] (cons new (cons old l)))) new old l))
+(defn insertL-g [new old l] ((insert-g #(cons %1 (cons %2 %3))) new old l))
+
+(defn insertR-g [new old l] ((insert-g #(cons %2 (cons %1 %3))) new old l))
+
+(defn seqS [new old l] (cons new l))
+
+(defn subst-g [new old l] ((insert-g seqS) new old l))
+
+(defn seqrem [new old l] l)
+
+(defn rember-g [a l] ((insert-g seqrem) nil a l))
+
+(defn atom-to-function [x]
+  (cond
+    (= x '+) +
+    (= x '*) *
+    :else pow))
+
+(defn value-f
+  [nexp]
+    (cond
+      (atom? nexp) nexp
+      :else ((atom-to-function (operator nexp)) (value-f (first-sub-expression nexp)) (value-f (second-sub-expression nexp)))))
+
+(defn multirember-f
+  [test?]
+    (fn
+      [a lat]
+      (cond
+        (empty? lat) ()
+        (test? a (first lat)) ((multirember-f test?) a (rest lat))
+        :else (cons (first lat) ((multirember-f test?) a (rest lat))))))
+
+; (defn multirember-eq (multirember-f =))
+
+(defn multirember-and-co 
+  [a lat col]
+  (cond
+    (empty? lat) (col () ())
+    (= a (first lat)) (multirember-and-co a (rest lat) (fn [newlat seen] (col newlat (cons (first lat) seen))))
+    :else (multirember-and-co a (rest lat) (fn [newlat seen] (col (cons (first lat) newlat) seen)))))
+
+
+(defn multiinsertLR
+  [new oldL oldR lat]
+  (cond
+    (empty? lat) ()
+    (= (first lat) oldR) (cons oldR (cons new (multiinsertLR new oldL oldR (rest lat))))
+    (= (first lat) oldL) (cons new (cons new (multiinsertLR new oldL oldR (rest lat))))
+    :else (cons (first lat (multiinsertLR new oldR oldL (rest lat))))))
+
+
+(defn multiinsertLR-and-co
+  [new oldL oldR lat col]
+  (cond
+    (empty? lat) (col () 0 0)
+    (= oldL (first lat)) (multiinsertLR-and-co new oldL oldR (rest lat) (fn [newlat seenL seenR] (col (cons new (cons oldL newlat)) (+ 1 seenL) seenR)))
+    (= oldR (first lat)) (multiinsertLR-and-co new oldL oldR (rest lat (fn [newlat seenL seenR] (col (cons oldR (cons new newlat)) seenL (+ 1 seenR)))))
+    :else (multiinsertLR-and-co new oldL oldR (rest lat) (fn [newlat seenL seenR] (col (cons (first lat) newlat) seenL seenR)))))
+
+; wrong in clojure.
+; (defn is-even? [n] (= (* (/ n 2) 2) n))
+
+
+(defn evens-only* 
+  [list]
+  (cond
+    (empty? list) ()
+    (and (atom? (first list)) (even? (first list))) (cons (first list) (evens-only* (rest list)))
+    (atom? (first list)) (evens-only* (rest list))
+    :else (cons (evens-only* (first list)) (evens-only* (rest list)))))
+
+
+
+
+
+
